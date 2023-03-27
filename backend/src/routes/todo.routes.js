@@ -13,7 +13,7 @@ router.get("/", todoController.index);
 router.post("/", todoController.create);
 
 // Update a Todo with id
-router.put("/:id", todoController.update);
+router.patch("/:id", todoController.update);
 
 // Delete a Todo with id
 router.delete("/:id", todoController.delete);

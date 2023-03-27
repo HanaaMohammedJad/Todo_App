@@ -18,8 +18,8 @@ app.use(express.json());
 // Use morgan for logging
 app.use(morgan('dev'));
 
-app.use('/', indexRouter);
-app.use('/todos', todosRouter);
+app.use('/api', indexRouter);
+app.use('/api/todos', todosRouter);
 
 
 // Start the server

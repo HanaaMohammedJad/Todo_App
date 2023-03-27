@@ -19,51 +19,69 @@ async function writeData(data) {
 const todoController = {
     async getById(req, res) {
         const data = await readData();
-        const todo = data.todos.find((t) => t.id === parseInt(req.params.id));
+        const todo = data.find((t) => t.id === req.params.id);
+
         if (!todo) {
-            return res.status(404).json({ message: "Todo not found" });
+            return res.status(404).send({ message: "Todo not found" });
         }
-        res.json(todo);
+
+        res.send(todo);
     },
 
     async index(req, res) {
         const todos = await readData();
+
         res.send(todos);
     },
 
     async create(req, res) {
         const data = await readData();
+
         const newTodo = {
-            id: data.length++,
+            id: `${data.length + 1}`,
             title: req.body.title,
-            completed: false,
+            completed: req.body.completed || false,
         };
-        data.todos.push(newTodo);
+
+        data.push(newTodo);
+
         await writeData(data);
-        res.status(201).json(newTodo);
+
+        res.status(201).send(newTodo);
     },
 
     async update(req, res) {
         const data = await readData();
-        const todo = data.todos.find((t) => t.id === parseInt(req.params.id));
+
+        const todo = data.find((t) => t.id === req.params.id);
+
         if (!todo) {
-            return res.status(404).json({ message: "Todo not found" });
+            return res.status(404).send({ message: "Todo not found" });
         }
+
         todo.title = req.body.title || todo.title;
-        todo.completed = req.body.completed || todo.completed;
+
+        todo.completed = req.body.completed || todo.completed;;
+
         await writeData(data);
-        res.json(todo);
+
+        res.send(todo);
     },
 
     async delete(req, res) {
         const data = await readData();
-        const index = data.todos.findIndex((t) => t.id === parseInt(req.params.id));
+
+        const index = data.findIndex((t) => t.id === req.params.id);
+
         if (index === -1) {
-            return res.status(404).json({ message: "Todo not found" });
+            return res.status(404).send({ message: "Todo not found" });
         }
-        const deleted = data.todos.splice(index, 1)[0];
+
+        const deleted = data.splice(index, 1)[0];
+
         await writeData(data);
-        res.json(deleted);
+
+        res.send(deleted);
     },
 
     async deleteAll(req, res) {
