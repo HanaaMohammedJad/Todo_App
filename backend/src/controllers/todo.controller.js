@@ -29,7 +29,14 @@ const todoController = {
     },
 
     async index(req, res) {
-        const todos = await readData();
+        let todos = await readData();
+        todos = todos.map(todo => {
+            return {
+                id: todo.id,
+                title: todo.title,
+                completed: todo.completed
+            }
+        });
 
         res.send(todos);
     },
@@ -40,6 +47,7 @@ const todoController = {
         const newTodo = {
             id: `${data.length + 1}`,
             title: req.body.title,
+            description: req.body.description,
             completed: req.body.completed || false,
         };
 
@@ -60,6 +68,8 @@ const todoController = {
         }
 
         todo.title = req.body.title || todo.title;
+
+        todo.description = req.body.description || todo.description;
 
         todo.completed = req.body.completed || todo.completed;;
 
